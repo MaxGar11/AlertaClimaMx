@@ -1,6 +1,6 @@
 # 🌱 AlertaClimaMX
 
-¡Bienvenido al repositorio del **Tablero de Monitoreo Climático**! 🚀 Esta plataforma está dedicada a ayudar a las comunidades a tomar decisiones informadas sobre prácticas agrícolas, proporcionando información en tiempo real sobre las condiciones climáticas críticas. Nuestra misión es empoderar a los agricultores y partes interesadas con herramientas para adaptarse a un entorno cambiante.
+¡Bienvenido al repositorio de **AlertaClimaMX**! 🚀 Esta plataforma está dedicada a ayudar a las comunidades a tomar decisiones informadas sobre prácticas agrícolas, proporcionando información en tiempo real sobre las condiciones climáticas críticas. Nuestra misión es empoderar a los agricultores y partes interesadas con herramientas para adaptarse a un entorno cambiante.
 
 ---
 
