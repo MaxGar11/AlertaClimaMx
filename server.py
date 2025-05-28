@@ -55,7 +55,10 @@ def obtener_clima():
                 "descripcion": descripcion.capitalize(),
                 "prom_temp": round(prom_temp, 2),
                 "prom_humedad": round(prom_humedad, 2),
-                "prom_radiacion": round(prom_radiacion, 2)
+                "prom_radiacion": round(prom_radiacion, 2),
+                "hist_temp": temps_hist,
+                "hist_humedad": humedad_hist,
+                "hist_radiacion": radiacion_hist
             })
         else:
             return jsonify({"error": "No se pudieron obtener los datos"}), 500
