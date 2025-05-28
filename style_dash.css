@@ -8,11 +8,19 @@
   font-weight: bold;
 }
 
-body {
-  font-family: "Montserrat", sans-serif;
-  background-color: #ffffff; /*#071349;*/
-  color: #333;
+:root {
+  --primary-color: #5e72e4;
+  --secondary-color: #f7fafc;
+  --success-color: #2dce89;
+  --info-color: #11cdef;
+  --warning-color: #fb6340;
 }
+
+body {
+ font-family: "Montserrat", sans-serif;
+  background-color: #f8f9fa;
+}
+
 .navbar {
   background-color: #ffffff; /*#071349 !important;*/
 }
@@ -48,87 +56,81 @@ body {
   width: 100%;
 }
 
-.container h2 {
-  color: #000000;
+.card {
+  border:rgb(0, 0, 0);
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+  z-index: 2;
 }
 
-.container.mt-5 p {
-  color: rgb(0, 0, 0); /* Cambia el color según lo necesites */
-  text-align: justify;
+.card-header {
+  background-color: white;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  font-weight: 600;
+  z-index: 2;
 }
 
-h2 {
-  position: relative;
-  color: rgb(0, 0, 0);
-  display: inline-block;
-  padding-bottom: 8px;
+.stat-card {
+  padding: 15px;
+  height: 100%;
+  z-index: 2;
 }
 
-h2::after {
-  content: "";
-  display: block;
-  width: 170%; /* La línea tendrá la mitad del ancho del título */
-  height: 3px;
-  background-color: orange;
-  margin-top: 5px;
+.stat-card .value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  z-index: 2;
 }
 
-.dropdown-container {
-  width: 100%;
-  text-align: right;
-}
-.dropdown-container select {
-  max-width: 250px;
+.stat-card .change.positive {
+  color: var(--success-color);
 }
 
-/* Estilos personalizados para las cards */
-.custom-card-row {
-  display: flex;
-  flex-wrap: wrap;
-  margin: -10px; /* Compensa el margen de las columnas */
+.stat-card .change.negative {
+  color: var(--warning-color);
 }
 
-.custom-card-row .col-md-4 {
-  padding: 10px; /* Espacio entre las cards */
-  flex: 0 0 33.333%; /* Cada card ocupa un tercio del espacio */
-  max-width: 33.333%; /* Limita el ancho de cada card */
-}
-
-.custom-card {
-  background-color: transparent;
-  /*border: 1px solid #ddd;*/
-  border-radius: 8px;
-  overflow: hidden;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  height: 100%; /* Asegura que todas las cards tengan la misma altura */
-}
-
-.custom-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-.custom-card-img {
-  width: 100%;
+.chart-placeholder {
+  background-color: #f8f9fa;
   height: 200px;
-  object-fit: cover; /* Asegura que la imagen cubra el espacio sin distorsionarse */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #adb5bd;
+  border-radius: 5px;
+  overflow: hidden;
+  z-index: 2;
 }
 
-.custom-card-body {
-  padding: 16px;
-  text-align: center;
-  background-color: transparent;
+.pro-badge {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  z-index: 2;
 }
 
-.custom-card-text {
-  font-size: 16px;
-  color: #333;
-  margin: 0;
+.page-header {
+  border-bottom: 1px solid #eee;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+  z-index: 2;
 }
 
-.custom-card-text .p {
-  color: black;
+/* Ajustes para móviles */
+@media (max-width: 767.98px) {
+  .stat-card .value {
+    font-size: 1.2rem;
+  }
+  .stat-card .change {
+    font-size: 0.8rem;
+  }
+  .container {
+    padding: 0 10px;
+  }
 }
 
 .footer {
@@ -136,40 +138,7 @@ h2::after {
   color: black;
   padding: 40px 0;
   text-align: left;
-}
-
-.footer-logo {
-  width: 350px; /* Ajusta el tamaño del logo */
-  margin-bottom: 10px;
-}
-
-.footer-text {
-  font-size: 14px;
-  max-width: 350px;
-}
-
-.footer-links {
-  list-style: none;
-  padding: 0;
-}
-
-.footer-links li {
-  margin-bottom: 5px;
-}
-
-.footer-links a {
-  color: black;
-  text-decoration: none;
-  font-size: 14px;
-}
-
-.footer-links a:hover {
-  text-decoration: underline;
-}
-
-.footer-icons img {
-  width: 30px; /* Ajusta el tamaño de los íconos */
-  margin-right: 10px;
+  z-index: 2;
 }
 
 .footer-logo {
@@ -218,7 +187,7 @@ h2::after {
   height: 1px;
   background-color: black;
   margin: 20px 0;
-  z-index: 3;
+  z-index: 2;
 }
 
 .footer-copy {
@@ -284,4 +253,11 @@ svg {
 * {
   margin: 0;
   padding: 0;
+}
+
+#climaChart {
+  width: 100% !important;  /* Asegura que el canvas ocupe el 100% del ancho del contenedor */
+  height: 600px;           /* Establece una altura fija o usa un porcentaje */
+  display: block;
+  margin: 0 auto;
 }
