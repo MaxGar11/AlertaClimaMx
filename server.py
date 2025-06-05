@@ -46,6 +46,41 @@ def obtener_clima():
             prom_temp = sum(temps_hist.values()) / len(temps_hist)
             prom_humedad = sum(humedad_hist.values()) / len(humedad_hist)
             prom_radiacion = sum(radiacion_hist.values()) / len(radiacion_hist)
+            
+            riesgos_detectados = []
+
+            # Helada (ej. menor a 5°C)
+            if temp_actual < 5:
+                riesgos_detectados.append("helada")
+
+            # Sequía (ej. humedad < 30%)
+            if humedad_actual < 30:
+                riesgos_detectados.append("sequía")
+
+            # Viento fuerte (> 10 m/s)
+            if viento_actual > 10:
+                riesgos_detectados.append("viento fuerte")
+
+            # Estrés térmico (temp > 35 °C)
+            if temp_actual > 35:
+                riesgos_detectados.append("estrés térmico")
+
+            # Granizo (si descripción contiene "granizo")
+            if "granizo" in descripcion.lower():
+                riesgos_detectados.append("granizo")
+
+            # Lluvia excesiva: lluvia + humedad muy alta
+            if "lluvia" in descripcion.lower() and humedad_actual > 90:
+                riesgos_detectados.append("lluvia excesiva")
+
+            # Riesgo de incendio (temp > 30 °C y humedad < 30%)
+            if temp_actual > 30 and humedad_actual < 30:
+                riesgos_detectados.append("riesgo de incendio")
+
+            # Riesgo de plaga (temp > 28 °C y humedad > 80%)
+            if temp_actual > 28 and humedad_actual > 80:
+                riesgos_detectados.append("riesgo de plaga")
+
 
             return jsonify({
                 "ciudad": CIUDAD,
@@ -58,7 +93,9 @@ def obtener_clima():
                 "prom_radiacion": round(prom_radiacion, 2),
                 "hist_temp": temps_hist,
                 "hist_humedad": humedad_hist,
-                "hist_radiacion": radiacion_hist
+                "hist_radiacion": radiacion_hist,
+                "riesgos": riesgos_detectados,
+                "recomendable": len(riesgos_detectados) == 0
             })
         else:
             return jsonify({"error": "No se pudieron obtener los datos"}), 500

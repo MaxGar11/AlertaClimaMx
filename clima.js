@@ -19,9 +19,7 @@ async function obtenerClima() {
     document.getElementById(
       "temp-promedio"
     ).innerHTML = `Promedio: ${data.prom_temp}°C`;
-    document.getElementById(
-      "humedad"
-    ).innerHTML = `💧 ${data.humedad_actual}%`;
+    document.getElementById("humedad").innerHTML = `💧 ${data.humedad_actual}%`;
     document.getElementById(
       "hum-promedio"
     ).innerHTML = `Promedio: ${data.prom_humedad}%`;
@@ -30,7 +28,7 @@ async function obtenerClima() {
     ).textContent = `💨 ${data.viento_actual} m/s`;
     document.getElementById(
       "radiacion"
-    ).textContent = `☀ ${data.prom_radiacion}`;
+    ).textContent = `🌞 ${data.prom_radiacion}`;
 
     // 2.2) Graficar comparativa Actual vs Histórico
     graficarComparativa("compareChart", {
@@ -38,19 +36,38 @@ async function obtenerClima() {
       historico: [data.prom_temp, data.prom_humedad, data.prom_radiacion],
     });
 
-    // 2.3) Graficar serie histórica de temperatura
-    graficarHistorico(
-      "tempHistoryChart",
-      data.hist_temp,
-      "Temperatura diaria (°C)"
-    );
+    // decideCultivo() ya está definida; ahora agrégala al flujo
+    const color = decideCultivo(data);
+    updateTrafficLight(color);
 
-    // 2.4) Graficar serie histórica de radiación
-    graficarHistorico(
-      "radiationHistoryChart",
-      data.hist_radiacion,
-      "Radiación diaria (W/m²)"
-    );
+    // Mostrar lista de riesgos
+    const lista = document.getElementById("lista-riesgos");
+    lista.innerHTML = "";
+
+    if (data.riesgos.length > 0) {
+      data.riesgos.forEach((riesgo) => {
+        const li = document.createElement("li");
+        li.textContent = `⚠ ${riesgo}`;
+        lista.appendChild(li);
+      });
+    } else {
+      const li = document.createElement("li");
+      li.textContent = "✅ Sin riesgos detectados.";
+      lista.appendChild(li);
+    }
+
+    // Mostrar explicación del semáforo
+    const explicacion = document.getElementById("explicacion-semaforo");
+    if (color === "red") {
+      explicacion.textContent =
+        "El semáforo está en ROJO debido a múltiples riesgos críticos para el cultivo.";
+    } else if (color === "yellow") {
+      explicacion.textContent =
+        "El semáforo está en AMARILLO porque existen algunos riesgos que podrían afectar el cultivo.";
+    } else {
+      explicacion.textContent =
+        "El semáforo está en VERDE: las condiciones actuales son adecuadas para el cultivo.";
+    }
   } catch (e) {
     console.error("Error obteniendo el clima:", e);
   }
@@ -90,93 +107,23 @@ function graficarComparativa(canvasId, { actual, historico }) {
   });
 }
 
-function graficarHistorico(canvasId, histData, etiqueta) {
-  // histData es un objeto { 'YYYYMMDD': valor, ... }
-  const fechas = Object.keys(histData)
-    .sort()
-    .map((fecha) => {
-      // Convertir 'YYYYMMDD' a 'YYYY-MM-DD'
-      return (
-        fecha.slice(0, 4) + "-" + fecha.slice(4, 6) + "-" + fecha.slice(6, 8)
-      );
-    });
-
-  const valores = Object.keys(histData)
-    .sort()
-    .map((fecha) => histData[fecha]);
-
-  const ctx = document.getElementById(canvasId).getContext("2d");
-  new Chart(ctx, {
-    type: "line",
-    data: {
-      labels: fechas,
-      datasets: [
-        {
-          label: etiqueta,
-          data: fechas.map((fecha, i) => ({
-            x: fecha,
-            y: valores[i],
-          })),
-          fill: false,
-          borderWidth: 2,
-          tension: 0.3, // curva suave
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        x: {
-          type: "time",
-          time: {
-            unit: "month", // o "year" si prefieres por año
-            tooltipFormat: "yyyy-MM-dd",
-          },
-          title: {
-            display: true,
-            text: "Fecha",
-            font: {
-              family: "Montserrat",
-              weight: "bold",
-            },
-          },
-          ticks: {
-            font: {
-              family: "Montserrat",
-            },
-          },
-        },
-        y: {
-          title: {
-            display: true,
-            text: etiqueta,
-            font: {
-              family: "Montserrat",
-              weight: "bold",
-            },
-          },
-          ticks: {
-            font: {
-              family: "Montserrat",
-            },
-          },
-        },
-      },
-      plugins: {
-        legend: {
-          labels: {
-            font: {
-              family: "Montserrat",
-            },
-          },
-        },
-      },
-      elements: {
-        point: {
-          radius: 0,
-        },
-      },
-    },
+function updateTrafficLight(status) {
+  ["red", "yellow", "green"].forEach((color) => {
+    const el = document.getElementById(`light-${color}`);
+    if (!el) return;
+    el.classList.toggle("on", status === color);
   });
+}
+
+// Ejemplo de función que decide el estado de cultivo
+function decideCultivo(datosClima) {
+  const riesgos = datosClima.riesgos || [];
+
+  if (riesgos.length >= 3) {
+    return "red"; // Riesgo alto
+  } else if (riesgos.length > 0) {
+    return "yellow"; // Riesgo moderado
+  } else {
+    return "green"; // Todo en orden
+  }
 }

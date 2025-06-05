@@ -261,3 +261,49 @@ svg {
   display: block;
   margin: 0 auto;
 }
+
+.traffic-light-container {
+  display: flex;
+  justify-content: center;
+}
+
+.traffic-light {
+  background: #333;
+  border-radius: 12px;
+  padding: 10px;
+  width: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.light {
+  width: 50px;
+  height: 50px;
+  background: #555;
+  border-radius: 50%;
+  margin: 0 auto;
+  opacity: 0.3;
+  transition: opacity 0.2s;
+}
+.light.red    { background: #e74c3c; }
+.light.yellow { background: #f1c40f; }
+.light.green  { background: #2ecc71; }
+
+/* Clase que enciende la luz */
+.light.on {
+  opacity: 1;
+}
+
+/* Asegura que en pantallas pequeñas el semáforo quede debajo */
+@media (max-width: 991px) {
+  .d-flex.flex-lg-row {
+    flex-direction: column !important;
+  }
+}
+
+.sticky-sidebar {
+  position: sticky;
+  top: 100px; /* Altura del navbar + margen */
+  z-index: 1;
+}
