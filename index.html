@@ -23,6 +23,32 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@2.0.0"></script>
   </head>
   <body>
+    <!-- Loader  -->
+    <div
+      id="loader"
+      style="
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        display: none;
+      "
+    >
+      <div
+        class="spinner-border text-primary"
+        role="status"
+        style="width: 4rem; height: 4rem"
+      >
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+    </div>
+
     <nav class="navbar navbar-expand-lg navbar-light">
       <!-- style="background-color: #071349" -->
       <div class="container">
@@ -57,7 +83,7 @@
               <li class="nav-item">
                 <a class="nav-link text-white" href="nosotros.html">Nosotros</a>
               </li>
-               <!--
+              <!--
               <li class="nav-item">
                 <a class="nav-link text-white" href="#">Botón</a>
               </li>
@@ -66,6 +92,20 @@
               </li>
               -->
             </ul>
+
+            <!-- Desplegable alineado a la derecha y debajo -->
+            <div class="text-end mt-2">
+              <select
+                id="select-municipio"
+                class="form-select w-auto d-block ms-auto"
+              >
+                <option value="Puebla,MX" selected>Puebla</option>
+                <option value="Atlixco,MX">Atlixco</option>
+                <option value="Chignahuapan,MX">Chignahuapan</option>
+                <option value="Teziutlan,MX">Teziutlan</option>
+                <option value="San Pedro Cholula,MX">San Pedro Cholula</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
@@ -126,6 +166,14 @@
             </div>
           </div>
         </div>
+
+        <p
+          class="text-muted"
+          id="ultima-actualizacion"
+          style="font-size: 0.9rem; z-index: 3;"
+        >
+          Última actualización: -
+        </p>
       </div>
 
       <!-- Charts section -->
@@ -148,16 +196,52 @@
               </div>
             </div>
 
-            <!-- Card de riesgos detectados -->
+            <!-- Card de riesgos detectados 
             <div class="card mt-4">
               <div class="card-header">Riesgos Detectados y Evaluación</div>
               <div class="card-body">
                 <ul id="lista-riesgos" class="mb-3">
-                  <!-- Riesgos se insertan dinámicamente aquí -->
+                  <!-- Riesgos se insertan dinámicamente aquí 
                 </ul>
                 <p id="explicacion-semaforo" class="fw-bold text-primary">
-                  <!-- Aquí se muestra la explicación del color -->
+                  <!-- Aquí se muestra la explicación del color
                 </p>
+              </div>
+            </div>
+            -->
+
+            <!-- Card de Análisis del Semáforo -->
+            <div id="card-analisis" class="card mt-3">
+              <div id="header-analisis" class="card-header fw-bold">
+                <!-- Título dinámico -->
+              </div>
+              <div class="card-body">
+                <p class="mb-0" id="texto-analisis">
+                  <!-- Texto explicativo dinámico -->
+                </p>
+              </div>
+            </div>
+
+            <div class="card mt-3">
+              <div class="card-header fw-bold">
+                Detalle de variables y umbrales
+              </div>
+              <div class="card-body">
+                <table
+                  class="table table-sm table-bordered text-center align-middle"
+                >
+                  <thead class="table-light">
+                    <tr>
+                      <th>Variable</th>
+                      <th>Valor actual</th>
+                      <th>Umbral mínimo</th>
+                      <th>Umbral máximo</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tabla-umbrales">
+                    <!-- Se llenará por JS -->
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>

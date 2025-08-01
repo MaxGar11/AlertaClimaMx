@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import requests
 import datetime
@@ -10,22 +10,40 @@ CORS(app)
 API_KEY = "a5ab028cba1c32f653a6af3e0d7a8718"
 
 # Ubicación (Puebla, México)
-CIUDAD = "Puebla,MX"
-LAT = 19.0437
-LON = -98.1986
+#ciudad = "Puebla,MX"
+#LAT = 19.0437
+#LON = -98.1986
+
+# Diccionario de municipios
+CIUDADES = {
+    "Puebla,MX": {"lat": 19.0437, "lon": -98.1986},
+    "Atlixco,MX": {"lat": 18.9076, "lon": -98.4391},
+    "Chignahuapan,MX": {"lat": 19.8366, "lon": -98.0261},
+    "Teziutlan,MX": {"lat": 19.8172, "lon": -97.3583},
+    "San Pedro Cholula,MX": {"lat": 19.0659, "lon": -98.3089},
+}
 
 @app.route('/clima', methods=['GET'])
 def obtener_clima():
     try:
+        ciudad = request.args.get("ciudad", "Puebla,MX")
+        coords = CIUDADES.get(ciudad)
+        
+        if not coords:
+            return jsonify({"error": "Municipio no disponible"}), 400
+
+        lat = coords["lat"]
+        lon = coords["lon"]
+    
         # URL de OpenWeather
-        url_weather = f"http://api.openweathermap.org/data/2.5/weather?q={CIUDAD}&appid={API_KEY}&units=metric&lang=es"
+        url_weather = f"http://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={API_KEY}&units=metric&lang=es"
         response_weather = requests.get(url_weather)
 
         # URL de NASA POWER (últimos 10 años)
         fecha_actual = datetime.datetime.today()
         fecha_inicio = fecha_actual.replace(year=fecha_actual.year - 10).strftime('%Y%m%d')
         fecha_fin = fecha_actual.strftime('%Y%m%d')
-        url_nasa = f"https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M,ALLSKY_SFC_SW_DWN,RH2M&community=SB&longitude={LON}&latitude={LAT}&start={fecha_inicio}&end={fecha_fin}&format=JSON"
+        url_nasa = f"https://power.larc.nasa.gov/api/temporal/daily/point?parameters=T2M,ALLSKY_SFC_SW_DWN,RH2M&community=SB&longitude={lon}&latitude={lat}&start={fecha_inicio}&end={fecha_fin}&format=JSON"
         response_nasa = requests.get(url_nasa)
 
         if response_weather.status_code == 200 and response_nasa.status_code == 200:
@@ -83,7 +101,7 @@ def obtener_clima():
 
 
             return jsonify({
-                "ciudad": CIUDAD,
+                "ciudad": ciudad, 
                 "temp_actual": temp_actual,
                 "humedad_actual": humedad_actual,
                 "viento_actual": viento_actual,

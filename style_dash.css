@@ -307,3 +307,7 @@ svg {
   top: 100px; /* Altura del navbar + margen */
   z-index: 1;
 }
+
+#loader {
+  backdrop-filter: blur(2px);
+}
